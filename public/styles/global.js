@@ -27,6 +27,11 @@ export const GlobalStyles = createGlobalStyles`
 		-webkit-font-smoothing: antialiased;
 	}
 
+	a:link,
+	a:visited {
+		color: var(--color);
+	}
+
 	@keyframes appear {
 		from {
 			opacity: 0;

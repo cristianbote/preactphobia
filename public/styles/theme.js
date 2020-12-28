@@ -15,5 +15,6 @@ export const theme = {
         }
     },
     sizes: { 100: '0.125em', 200: '0.25em', 300: '1em', 400: '1.5em', 500: '2.5em' },
-    fontSizes: { 100: '0.75em', 200: '1em', 300: '1.5em', 400: '2em', 500: '2.5em' }
+    fontSizes: { 100: '0.75em', 200: '1em', 300: '1.5em', 400: '2em', 500: '2.5em' },
+    widthSmall: '766px'
 };
