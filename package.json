@@ -1,8 +1,9 @@
 {
 	"scripts": {
 		"start": "wmr",
-		"build": "rm -rf ./build && wmr build --prerender",
-		"serve": "wmr serve"
+		"build": "rm -rf ./build && wmr build --prerender && npm run postbuild",
+		"serve": "wmr serve",
+		"postbuild": "cp ./public/favicon.ico ./dist/favicon.ico"
 	},
 	"eslintConfig": {
 		"extends": "preact"
