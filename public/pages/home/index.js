@@ -37,7 +37,9 @@ const Content = styled(Box)(({ useShadow, useAnim, useBorder }) => [
     {
         borderRadius: theme.sizes[200],
         backgroundColor: theme.colors.gray[200],
-        maxWidth: theme.widthSmall
+        maxWidth: theme.widthSmall,
+        position: 'relative',
+        zIndex: 1
     },
     useBorder ? { border: [theme.sizes[100], 'solid', theme.colors.accent[100]].join(' ') } : null,
     useAnim ? { animation: 'appear 400ms ease-out 1' } : null,
@@ -141,6 +143,7 @@ const SuggestionList = styled('ul')({
     background: '#333',
     maxHeight: '35vh',
     overflow: 'auto',
+    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
     zIndex: 10
 });
 
