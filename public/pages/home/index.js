@@ -37,6 +37,14 @@ const Content = styled(Box)({
     maxWidth: theme.widthSmall
 });
 
+const ErrorCard = styled(Box)({
+    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
+    borderRadius: theme.sizes[200],
+    backgroundColor: theme.colors.error,
+    animation: 'appear 400ms ease-out 1',
+    maxWidth: theme.widthSmall
+});
+
 const Card = ({ name, version, description, times, preact }) => {
     return (
         <>
@@ -137,29 +145,32 @@ export default function Home() {
             <Box size={300} />
             <Box size={200} full>
                 <Input
+                    type="text"
+                    autocorrect="off"
+                    autocapitalize="none"
                     placeholder="type a package name"
                     onKeyDown={(e) => {
                         if (e.keyCode === 13) {
                             fetchPackage(e.target.value);
+                            e.target.blur();
                         }
                     }}
                 />
             </Box>
             <Box size={200} />
             <Box size={300}>
-                <Text size={100} faded>
-                    Under the hood uses the{'  '}
-                    <Text as="a" href="https://bundlephobia.com">
-                        bundlephobia.com
-                    </Text>
-                    {'  '}
-                    API
+                <Text size={100} faded as="a" href="https://bundlephobia.com">
+                    Under the hood uses the bundlephobia.com API
                 </Text>
             </Box>
             <Box size={400} />
             {res ? (
                 res.error ? (
-                    <Text>It seems that there's an error fetching the package info</Text>
+                    <ErrorCard size={300}>
+                        <Text bold>It seems that there's an error fetching the package info</Text>
+                        <Box size={100} />
+                        <Text>Make sure the package name is correct</Text>
+                    </ErrorCard>
                 ) : (
                     <Card {...res} />
                 )
