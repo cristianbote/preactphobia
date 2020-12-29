@@ -3,7 +3,7 @@
 		"start": "wmr",
 		"build": "rm -rf ./build && wmr build --prerender && npm run postbuild",
 		"serve": "wmr serve",
-		"postbuild": "cp ./public/favicon.ico ./dist/favicon.ico"
+		"postbuild": "cp ./public/favicon.ico ./dist/favicon.ico; cp ./public/cover.png ./dist/cover.png"
 	},
 	"eslintConfig": {
 		"extends": "preact"
