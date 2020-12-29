@@ -213,6 +213,15 @@ export default function Home() {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [value, setValue] = useState('');
 
+    // Load initial value from `?q=my-package` url component if set
+    useEffect(() => {
+        const initial = new URLSearchParams(location.search).get('p');
+        if (initial) {
+            fetchPackage(initial);
+            setValue(initial);
+        }
+    }, []);
+
     const fetchSuggestions = useCallback(
         debounce(async (name) => {
             if (!name) {
