@@ -325,6 +325,10 @@ export default function Home() {
                                 if (e.key === 'ArrowDown') {
                                     e.preventDefault();
                                     setSelected(Math.min(selected + 1, suggestions.length - 1));
+                                    if (!showSuggestions) {
+                                        fetchSuggestions(value);
+                                        setShowSuggestions(true);
+                                    }
                                 } else if (e.key === 'ArrowUp') {
                                     e.preventDefault();
                                     setSelected(Math.max(selected - 1, 0));
