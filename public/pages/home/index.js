@@ -213,6 +213,15 @@ export default function Home() {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [value, setValue] = useState('');
 
+    // Load initial value from `?q=my-package` url component if set
+    useEffect(() => {
+        const initial = new URLSearchParams(location.search).get('p');
+        if (initial) {
+            fetchPackage(initial);
+            setValue(initial);
+        }
+    }, []);
+
     const fetchSuggestions = useCallback(
         debounce(async (name) => {
             if (!name) {
@@ -270,7 +279,7 @@ export default function Home() {
     // Hide suggestion box if user clicks outside
     useEffect(() => {
         const listener = (e) => {
-            if (e.target.closest('ul[role="listbox"]') !== null) {
+            if (e.target.closest('ul[role="listbox"]') === null) {
                 setShowSuggestions(false);
             }
         };
