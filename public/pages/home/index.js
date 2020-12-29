@@ -270,7 +270,7 @@ export default function Home() {
     // Hide suggestion box if user clicks outside
     useEffect(() => {
         const listener = (e) => {
-            if (e.target.closest('ul[role="listbox"]') !== null) {
+            if (e.target.closest('ul[role="listbox"]') === null) {
                 setShowSuggestions(false);
             }
         };
