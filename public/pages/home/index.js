@@ -151,7 +151,7 @@ export default function Home() {
                     <path d="M0 0h1200v300L0 600V0z" fill={theme.colors.accent[100]} />
                 </svg>
             </PurpleThing>
-            <Content useShadow size={300} centered onTop>
+            <Content useShadow size={300} centered>
                 <Text as="h1" size={400}>
                     <Text bold as="span">
                         Preact
