@@ -263,6 +263,19 @@ export default function Home() {
         }
     }, []);
 
+    // Hide suggestion box if user clicks outside
+    useEffect(() => {
+        const listener = (e) => {
+            if (e.target.closest('ul[role="listbox"]') !== null) {
+                setShowSuggestions(false);
+            }
+        };
+        document.addEventListener('click', listener);
+        return () => {
+            document.removeEventListener('click', listener);
+        };
+    }, []);
+
     return (
         <>
             <PurpleThing>
@@ -302,8 +315,12 @@ export default function Home() {
                             autocapitalize="none"
                             placeholder="type a package name"
                             value={value}
-                            onBlur={() => setShowSuggestions(false)}
-                            onFocus={() => setShowSuggestions(true)}
+                            onFocus={() => {
+                                setShowSuggestions(true);
+                                if (!suggestions.length) {
+                                    fetchSuggestions(value);
+                                }
+                            }}
                             onKeyDown={(e) => {
                                 if (e.key === 'ArrowDown') {
                                     e.preventDefault();
