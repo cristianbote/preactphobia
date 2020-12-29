@@ -5,6 +5,8 @@ export const GlobalStyles = createGlobalStyles`
 	:root {
 		--color: #eee;
 		--background-color: #242424;
+		--border-color: #666;
+		--accent-color: #673ab8;
 	}
 
 	html,

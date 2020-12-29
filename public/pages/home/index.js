@@ -117,9 +117,121 @@ const Card = ({ name, version, description, times, preact }) => {
     );
 };
 
+function debounce(fn, ms) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(null, args), ms);
+    };
+}
+
+const SuggestionWrapper = styled('div')({
+    position: 'relative'
+});
+
+const SuggestionList = styled('ul')({
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    border: '.0625rem solid var(--border-color)',
+    background: '#333',
+    maxHeight: '35vh',
+    overflow: 'auto',
+    zIndex: 10
+});
+
+const SuggestionListItem = styled('li')({
+    padding: '.5rem 1rem',
+    cursor: 'pointer',
+    '&:hover, &[aria-selected="true"]': {
+        background: 'var(--accent-color)'
+    },
+    '& + &': {
+        borderTop: '.0625rem solid var(--border-color)'
+    }
+});
+
+function SuggestionItem({ item, active, onClick }) {
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (active && ref.current) {
+            // TODO: We want to get the ref of the element,
+            // not of the goober component.
+            ref.current.base.scrollIntoView({ block: 'nearest' });
+        }
+    }, [active]);
+
+    return (
+        <SuggestionListItem
+            ref={ref}
+            role="option"
+            tabIndex={-1}
+            aria-selected={active}
+            onClick={onClick}
+        >
+            <PackageName
+                dangerouslySetInnerHTML={{
+                    __html: item.highlight
+                }}
+            />
+            <PackageDescription>{item.package.description}</PackageDescription>
+        </SuggestionListItem>
+    );
+}
+
+const PackageName = styled('span')({
+    display: 'block',
+    marginBottom: '.25rem',
+    em: {
+        fontWeight: 'bold',
+        fontStyle: 'normal'
+    }
+});
+
+const PackageDescription = styled('span')({
+    fontSize: '.9rem',
+    fontWeight: 'lighter',
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+});
+
 export default function Home() {
     const [res, setRes] = useState();
     const preactResult = useRef();
+    const [suggestions, setSuggestions] = useState([]);
+    const [selected, setSelected] = useState(-1);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [value, setValue] = useState('');
+
+    const fetchSuggestions = useCallback(
+        debounce(async (name) => {
+            try {
+                const result = await (
+                    await fetch(`https://api.npms.io/v2/search/suggestions?q=${name}`)
+                ).json();
+                setSuggestions(result);
+            } catch (e) {
+                setRes({
+                    error: true
+                });
+            }
+        }, 300),
+        []
+    );
+
+    const onInput = useCallback((e) => {
+        const value = e.target.value;
+        setValue(value);
+        setShowSuggestions(true);
+        fetchSuggestions(value);
+    }, []);
 
     const fetchPackage = useCallback(async (name) => {
         try {
@@ -170,7 +282,15 @@ export default function Home() {
                     <Form
                         onSubmit={(e) => {
                             e.preventDefault();
-                            fetchPackage(e.target.elements[0].value);
+                            const name =
+                                selected > -1
+                                    ? suggestions[selected].package.name
+                                    : e.target.elements[0].value;
+                            fetchPackage(name);
+                            setValue(name);
+                            setSelected(-1);
+                            setShowSuggestions(false);
+                            setSuggestions([]);
                         }}
                     >
                         <Input
@@ -178,7 +298,42 @@ export default function Home() {
                             autocorrect="off"
                             autocapitalize="none"
                             placeholder="type a package name"
+                            value={value}
+                            onBlur={() => setShowSuggestions(false)}
+                            onFocus={() => setShowSuggestions(true)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    setSelected(Math.min(selected + 1, suggestions.length - 1));
+                                } else if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    setSelected(Math.max(selected - 1, 0));
+                                }
+                            }}
+                            onInput={onInput}
                         />
+                        <SuggestionWrapper>
+                            {suggestions.length > 0 && showSuggestions && (
+                                <SuggestionList role="listbox" tabIndex={0}>
+                                    {suggestions.map((item, i) => {
+                                        return (
+                                            <SuggestionItem
+                                                key={item.package.name}
+                                                active={selected === i}
+                                                item={item}
+                                                onClick={() => {
+                                                    const name = item.package.name;
+                                                    fetchPackage(name);
+                                                    setValue(name);
+                                                    setSelected(-1);
+                                                    setSuggestions([]);
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </SuggestionList>
+                            )}
+                        </SuggestionWrapper>
                     </Form>
                 </Box>
                 <Box size={200} />
