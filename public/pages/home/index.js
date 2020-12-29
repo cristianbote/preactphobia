@@ -239,7 +239,7 @@ export default function Home() {
     const fetchPackage = useCallback(async (name) => {
         try {
             const result = await (
-                await fetch(`https://bundlephobia.com/api/size?package=${name}`)
+                await fetch(`https://bundlephobia.com/api/size?package=${encodeURIComponent(name)}`)
             ).json();
             const preact =
                 preactResult.current ||
