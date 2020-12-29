@@ -215,6 +215,10 @@ export default function Home() {
 
     const fetchSuggestions = useCallback(
         debounce(async (name) => {
+            if (!name) {
+                setSuggestions([]);
+                return;
+            }
             try {
                 const result = await (
                     await fetch(`https://api.npms.io/v2/search/suggestions?q=${name}`)
@@ -306,7 +310,6 @@ export default function Home() {
                             setValue(name);
                             setSelected(-1);
                             setShowSuggestions(false);
-                            setSuggestions([]);
                         }}
                     >
                         <Input
