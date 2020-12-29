@@ -29,13 +29,18 @@ const Input = styled('input')({
     }
 });
 
-const Content = styled(Box)({
-    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
-    borderRadius: theme.sizes[200],
-    backgroundColor: theme.colors.gray[200],
-    animation: 'appear 400ms ease-out 1',
-    maxWidth: theme.widthSmall
-});
+const Content = styled(Box)(({ useShadow, useAnim, useBorder }) => [
+    {
+        borderRadius: theme.sizes[200],
+        backgroundColor: theme.colors.gray[200],
+        maxWidth: theme.widthSmall
+    },
+    useBorder ? { border: [theme.sizes[100], 'solid', theme.colors.accent[100]].join(' ') } : null,
+    useAnim ? { animation: 'appear 400ms ease-out 1' } : null,
+    useShadow
+        ? { boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' ') }
+        : null
+]);
 
 const ErrorCard = styled(Box)({
     boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
@@ -45,10 +50,18 @@ const ErrorCard = styled(Box)({
     maxWidth: theme.widthSmall
 });
 
+const PurpleThing = styled('div')({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 0
+});
+
 const Card = ({ name, version, description, times, preact }) => {
     return (
         <>
-            <Content centered reactive>
+            <Content useAnim useBorder centered reactive>
                 <Box size={300} flex>
                     <Text bold size={300}>
                         {name}
@@ -132,49 +145,58 @@ export default function Home() {
     }, []);
 
     return (
-        <Box centered>
-            <Text as="h1" size={400}>
-                <Text bold as="span">
-                    Preact
+        <>
+            <PurpleThing>
+                <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+                    <path d="M0 0h1200v300L0 600V0z" fill={theme.colors.accent[100]} />
+                </svg>
+            </PurpleThing>
+            <Content useShadow size={300} centered onTop>
+                <Text as="h1" size={400}>
+                    <Text bold as="span">
+                        Preact
+                    </Text>
+                    Phobia
                 </Text>
-                Phobia
-            </Text>
-            <Box size={300}>
-                <Text faded>Find out how many copies of Preact can fit into a package</Text>
-            </Box>
-            <Box size={300} />
-            <Box size={200} full>
-                <Input
-                    type="text"
-                    autocorrect="off"
-                    autocapitalize="none"
-                    placeholder="type a package name"
-                    onKeyDown={(e) => {
-                        if (e.keyCode === 13) {
-                            fetchPackage(e.target.value);
-                            e.target.blur();
-                        }
-                    }}
-                />
-            </Box>
-            <Box size={200} />
-            <Box size={300}>
-                <Text size={100} faded as="a" href="https://bundlephobia.com">
-                    Under the hood uses the bundlephobia.com API
-                </Text>
-            </Box>
-            <Box size={400} />
-            {res ? (
-                res.error ? (
-                    <ErrorCard size={300}>
-                        <Text bold>It seems that there's an error fetching the package info</Text>
-                        <Box size={100} />
-                        <Text>Make sure the package name is correct</Text>
-                    </ErrorCard>
-                ) : (
-                    <Card {...res} />
-                )
-            ) : null}
-        </Box>
+                <Box size={300}>
+                    <Text faded>Find out how many copies of Preact can fit into a package</Text>
+                </Box>
+                <Box size={300} />
+                <Box size={200} full>
+                    <Input
+                        type="text"
+                        autocorrect="off"
+                        autocapitalize="none"
+                        placeholder="type a package name"
+                        onKeyDown={(e) => {
+                            if (e.keyCode === 13) {
+                                fetchPackage(e.target.value);
+                                e.target.blur();
+                            }
+                        }}
+                    />
+                </Box>
+                <Box size={200} />
+                <Box size={300}>
+                    <Text size={100} faded as="a" href="https://bundlephobia.com">
+                        Under the hood uses the bundlephobia.com API
+                    </Text>
+                </Box>
+                <Box size={400} />
+                {res ? (
+                    res.error ? (
+                        <ErrorCard size={300}>
+                            <Text bold>
+                                It seems that there's an error fetching the package info
+                            </Text>
+                            <Box size={100} />
+                            <Text>Make sure the package name is correct</Text>
+                        </ErrorCard>
+                    ) : (
+                        <Card {...res} />
+                    )
+                ) : null}
+            </Content>
+        </>
     );
 }

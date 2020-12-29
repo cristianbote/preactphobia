@@ -20,6 +20,7 @@ export const GlobalStyles = createGlobalStyles`
 		font: 1rem system-ui,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 		color: var(--color);
 		background-color: var(--background-color);
+		position: relative;
 	}
 
 	* {

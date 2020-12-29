@@ -1,7 +1,7 @@
 import { styled } from 'goober';
 import { theme } from '../../styles/theme';
 
-export const Box = styled('div')(({ size, centered, horizontal, reactive, flex, full }) => [
+export const Box = styled('div')(({ size, centered, horizontal, reactive, flex, full, onTop }) => [
     {
         display: 'flex',
         flexShrink: 0,
@@ -11,6 +11,7 @@ export const Box = styled('div')(({ size, centered, horizontal, reactive, flex, 
         alignItems: centered ? 'center' : 'flex-start',
         justifyContent: centered ? 'center' : 'flex-start'
     },
+    onTop ? { zIndex: 1 } : null,
     flex ? { flex: 1 } : null,
     full ? { width: '100%' } : null,
     reactive
