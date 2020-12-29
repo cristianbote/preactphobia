@@ -4,6 +4,10 @@ import { Box } from '../../components/box/box';
 import { Text } from '../../components/text/text';
 import { theme } from '../../styles/theme';
 
+const Form = styled('form')({
+    width: '100%'
+});
+
 const Input = styled('input')({
     display: 'flex',
     flex: 1,
@@ -163,18 +167,19 @@ export default function Home() {
                 </Box>
                 <Box size={300} />
                 <Box size={200} full>
-                    <Input
-                        type="text"
-                        autocorrect="off"
-                        autocapitalize="none"
-                        placeholder="type a package name"
-                        onKeyDown={(e) => {
-                            if (e.keyCode === 13) {
-                                fetchPackage(e.target.value);
-                                e.target.blur();
-                            }
+                    <Form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            fetchPackage(e.target.elements[0].value);
                         }}
-                    />
+                    >
+                        <Input
+                            type="text"
+                            autocorrect="off"
+                            autocapitalize="none"
+                            placeholder="type a package name"
+                        />
+                    </Form>
                 </Box>
                 <Box size={200} />
                 <Box size={300}>
