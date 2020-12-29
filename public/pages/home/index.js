@@ -20,7 +20,8 @@ const Input = styled('input')({
     width: '100%',
     textAlign: 'center',
     '&::placeholder': {
-        color: theme.colors.accent[100]
+        color: theme.colors.accent[100],
+        backgroundColor: theme.colors.gray[500]
     },
     '&:active,&:focus': {
         borderColor: theme.colors.accent[100],
@@ -57,7 +58,8 @@ const Card = ({ name, version, description, times, preact }) => {
                 <Box size={200} />
                 <Box size={300} flex horizontal centered>
                     <Text bold size={300}>
-                        {times}{' '}
+                        {times}
+                        {'  '}
                         <Text as="span" bold faded>
                             &times;
                         </Text>
@@ -146,10 +148,11 @@ export default function Home() {
             <Box size={200} />
             <Box size={300}>
                 <Text size={100} faded>
-                    Under the hood uses the{' '}
+                    Under the hood uses the{'  '}
                     <Text as="a" href="https://bundlephobia.com">
                         bundlephobia.com
-                    </Text>{' '}
+                    </Text>
+                    {'  '}
                     API
                 </Text>
             </Box>
