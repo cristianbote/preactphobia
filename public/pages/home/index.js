@@ -67,13 +67,23 @@ const PurpleThing = styled('div')({
 });
 
 const ShareButton = styled('button')({
-    padding: theme.sizes[300],
+    padding: theme.sizes[400],
     borderRadius: theme.sizes[200],
     fontSize: theme.fontSizes[200],
+    fontWeight: 800,
     border: 0,
     color: 'white',
     backgroundColor: theme.colors.accent[100],
-    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' ')
+    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
+    cursor: 'pointer',
+    '&:focus,&:active': {
+        outline: 0,
+        backgroundColor: theme.colors.gray[100]
+    },
+    '&:active': {
+        transform: 'scale(.96)',
+        boxShadow: [0, theme.sizes[100], theme.sizes[200], theme.colors.gray[50]].join(' ')
+    }
 });
 
 const Package = ({ name, version, description }) => (
