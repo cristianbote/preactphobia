@@ -14,6 +14,8 @@ const Input = styled('input')({
     flexDirection: 'column',
     padding: [theme.sizes[200], theme.sizes[300]].join(' '),
     border: 0,
+    zIndex: 3,
+    position: 'relative',
     margin: 0,
     fontSize: theme.fontSizes[400],
     backgroundColor: theme.colors.gray[500],
@@ -64,20 +66,45 @@ const PurpleThing = styled('div')({
     zIndex: 0
 });
 
+const ShareButton = styled('button')({
+    padding: theme.sizes[400],
+    borderRadius: theme.sizes[200],
+    fontSize: theme.fontSizes[200],
+    fontWeight: 800,
+    border: 0,
+    color: 'white',
+    backgroundColor: theme.colors.accent[100],
+    boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
+    cursor: 'pointer',
+    '&:focus,&:active': {
+        outline: 0,
+        backgroundColor: theme.colors.gray[100]
+    },
+    '&:active': {
+        transform: 'scale(.96)',
+        boxShadow: [0, theme.sizes[100], theme.sizes[200], theme.colors.gray[50]].join(' ')
+    }
+});
+
+const Package = ({ name, version, description }) => (
+    <Box size={400} flex>
+        <Text bold size={300}>
+            {name}
+            <Text as="span" bold faded>
+                @{version}
+            </Text>
+        </Text>
+        <Box size={200} />
+        <Text faded>{description}</Text>
+    </Box>
+);
+
 const Card = ({ name, version, description, times, preact }) => {
     return (
         <>
+            <Box size={400} />
             <Content useAnim useBorder centered reactive>
-                <Box size={300} flex>
-                    <Text bold size={300}>
-                        {name}
-                        <Text as="span" bold faded>
-                            @{version}
-                        </Text>
-                    </Text>
-                    <Box size={200} />
-                    <Text faded>{description}</Text>
-                </Box>
+                <Package name={name} version={version} description={description} />
                 <Box size={200} />
                 <Text size={400} bold>
                     =
@@ -91,21 +118,34 @@ const Card = ({ name, version, description, times, preact }) => {
                             &times;
                         </Text>
                     </Text>
-
-                    <Box size={200} />
-                    <Box flex>
-                        <Text bold size={300}>
-                            preact
-                            <Text as="span" bold faded>
-                                @{preact.version}
-                            </Text>
-                        </Text>
-                        <Box size={200} />
-                        <Text faded>{preact.description}</Text>
-                    </Box>
+                    <Package
+                        name={'preact'}
+                        version={preact.version}
+                        description={preact.description}
+                    />
                 </Box>
             </Content>
-            <Box size={400} />
+            <Box size={300} />
+            <Box size={400}>
+                <ShareButton
+                    onClick={() => {
+                        let el = document.createElement('input');
+                        el.style = 'opacity: 0; position: absolute;';
+                        el.value = document.location.href;
+                        document.body.appendChild(el);
+                        el.focus();
+                        el.select();
+                        el.setSelectionRange(0, el.value.length);
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+
+                        alert('Copied!');
+                    }}
+                >
+                    Get the link
+                </ShareButton>
+            </Box>
+            <Box size={300} />
             <Text
                 as="a"
                 accent
@@ -115,6 +155,7 @@ const Card = ({ name, version, description, times, preact }) => {
             >
                 Ready to switch? Getting started with Preact
             </Text>
+            <Box size={300} />
         </>
     );
 };
@@ -138,13 +179,14 @@ const SuggestionList = styled('ul')({
     width: '100%',
     listStyle: 'none',
     padding: 0,
-    margin: 0,
-    border: '.0625rem solid var(--border-color)',
+    margin: ['-2px', 0, 0, 0].join(' '),
+    border: 0,
     background: '#333',
     maxHeight: '35vh',
     overflow: 'auto',
+    borderRadius: [0, 0, theme.sizes[200], theme.sizes[200]].join(' '),
     boxShadow: [0, theme.sizes[200], theme.sizes[300], theme.colors.gray[50]].join(' '),
-    zIndex: 10
+    zIndex: 2
 });
 
 const SuggestionListItem = styled('li')({
@@ -203,6 +245,10 @@ const PackageDescription = styled('span')({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
+});
+
+const Anchor = styled('a')({
+    textDecoration: 'none'
 });
 
 export default function Home() {
@@ -267,6 +313,8 @@ export default function Home() {
                 times: Math.round(result.gzip / preact.gzip),
                 preact
             });
+
+            window.history.pushState(null, null, `/?p=${result.name}`);
         } catch (e) {
             if (e.message.indexOf('Failed') !== -1) {
                 setRes({
@@ -296,18 +344,20 @@ export default function Home() {
                     <path d="M0 0h1200v300L0 600V0z" fill={theme.colors.accent[100]} />
                 </svg>
             </PurpleThing>
-            <Content useShadow size={300} centered>
-                <Text as="h1" size={400}>
-                    <Text bold as="span">
-                        Preact
+            <Content useShadow size={500} centered>
+                <Anchor href="https://preactphobia.com">
+                    <Text as="h1" size={400}>
+                        <Text bold as="span">
+                            Preact
+                        </Text>
+                        Phobia
                     </Text>
-                    Phobia
-                </Text>
+                </Anchor>
                 <Box size={300}>
                     <Text faded>Find out how many copies of Preact can fit into a package</Text>
                 </Box>
-                <Box size={300} />
-                <Box size={200} full>
+                <Box size={400} />
+                <Box size={300} full>
                     <Form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -372,13 +422,12 @@ export default function Home() {
                         </SuggestionWrapper>
                     </Form>
                 </Box>
-                <Box size={200} />
-                <Box size={300}>
+                <Box size={300} />
+                <Box size={400}>
                     <Text size={100} faded as="a" href="https://bundlephobia.com">
-                        Under the hood uses the bundlephobia.com API
+                        Under the hood, we use the bundlephobia.com API
                     </Text>
                 </Box>
-                <Box size={400} />
                 {res ? (
                     res.error ? (
                         <ErrorCard size={300}>
