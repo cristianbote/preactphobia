@@ -13,11 +13,10 @@
 		"react-dom": "preact/compat"
 	},
 	"dependencies": {
-		"goober": "^2.0.19-next.1",
-		"goober-autoprefixer": "1.2.1",
+		"goober": "^2.0.19",
 		"preact-iso": "^0.2.0"
 	},
 	"devDependencies": {
-		"wmr": "^1.0.0"
+		"wmr": "^1.1.0"
 	}
 }

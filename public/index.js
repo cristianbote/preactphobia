@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'preact-iso/lazy';
 import Home from './pages/home/index.js';
 import NotFound from './pages/_404.js';
 import { setup } from 'goober';
-import { prefix } from 'goober-autoprefixer';
+import { prefix } from 'goober/prefixer';
 import { Box } from './components/box/box.js';
 import { WithStyles } from './styles/with-styles.js';
 
