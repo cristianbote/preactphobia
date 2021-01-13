@@ -1,4 +1,5 @@
 {
+	"version": "0.1.0",
 	"scripts": {
 		"start": "wmr",
 		"build": "rm -rf ./build && wmr build --prerender && npm run postbuild",
