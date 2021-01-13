@@ -8,8 +8,9 @@ import { setup } from 'goober';
 import { prefix } from 'goober/prefixer';
 import { Box } from './components/box/box.js';
 import { WithStyles } from './styles/with-styles.js';
+import { shouldForwardProps } from './styles/should-forward-props.js';
 
-setup(h, prefix);
+setup(h, prefix, undefined, shouldForwardProps);
 
 export function App() {
     return (
